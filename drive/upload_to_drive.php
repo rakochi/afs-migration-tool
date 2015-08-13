@@ -61,10 +61,6 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $logline = date('Y-m-d H:i:s') . ": configObj initialized" . "\n"; 
     fwrite($configObj->logFile, $logline);
 
-   /* echo "<br>" . $_SESSION["access_token"];
-    echo "<br>" . $_SESSION["refresh_token"];
-    echo "<br><br>"; */
-
    $drive_service = new Google_Service_Drive($client);
 
    $UsersAFSObj = new UsersAFS;
@@ -72,22 +68,13 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
    $UsersAFSObj->fileList = $_SESSION['fileList'];
    $UsersAFSObj->afsPath = $_SESSION['afsPath'];
 
-   //print_r($UsersAFSObj->folderList);
-   //print_r($UsersAFSObj->fileList);
-
-////end session here
-
-//CLOSE BROWSER CONNECTION AND RUN THE LAST TWO LINES
-//AFTER FLUSH
-
-echo "test done!";
-return;
+  // Closes browser connection, displays the file on the include line,
+  // and runs the last two lines after flush
 
 	// Buffer the upcoming output
 	ob_start(); 
 
 	include '../request_submitted.html';
-
 
   // Get the size of the output
 	$outputSize = ob_get_length();
@@ -102,8 +89,8 @@ return;
         ob_flush();
         flush();
 
-//    createFolders($drive_service, $client, $configObj, $UsersAFSObj);
-//    uploadFiles($drive_service, $client, $configObj, $UsersAFSObj);
+    createFolders($drive_service, $client, $configObj, $UsersAFSObj);
+    uploadFiles($drive_service, $client, $configObj, $UsersAFSObj);
 
   }
   catch (Exception $e)
