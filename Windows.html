@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<!--
+    Copyright 2015 Michael McGookey, The University of Michigan
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. 
+-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>AFS Migration Tool</title>
+    <style>
+        #itsBanner {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            /*           z-index: -1;*/
+            padding: 20px;
+            width: 100%;
+            background: #00274c;
+            white-space: nowrap;
+        }
+        
+        html * {
+            font-family: Arial !important;
+        }
+        
+        h1 {
+            position: relative;
+            top: 75px;
+        }
+        
+        #text {
+            position: relative;
+            top: 75px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="itsBanner">
+        <a href="index.html"><img src="site_banner.png" alt="AFS Migration Tool" /></a>
+    </div>
+
+    <h1>AFS to Windows</h1>
+
+    <div id="text">
+        <h4>Tutorial:</h4>
+
+
+        <div id="instructions">
+            <ol type=1>
+                <li>Click <a href="scripts/Data Migration Tool.exe" target="_blank">here</a> to download the tool.</li>
+                <br><br>
+                <li>Move the tool into the folder that you’d like your files to be downloaded to.</li>
+                <img src="Windows_Images/image0.png" width=480 height=300>
+                <br><br>
+                <li>Double click the file and wait for a window to appear. You may get a security warning popup, in which case click “Run” to certify that you wish to run the program. Don’t worry, it’s completely safe.</li>
+                <img src="Windows_Images/image01.png" width=480 height=300>
+                <br><br>
+                <li>Enter your uniqname when it prompts you to.</li>
+                <img src="Windows_Images/image1.png" width=480 height=300>
+                <br><br>
+                <li>Enter your password when it prompts you to. Note that the cursor will not move as you type.</li>
+                <img src="Windows_Images/image2.png" width=480 height=300>
+                <br><br>
+                <li>The file transfer will begin and a list of the files being downloaded will scroll across the screen. Note that this may take a while depending on the size of your files and the speed of your internet connection.</li>
+                <img src="Windows_Images/image3.png" width=480 height=300>
+                <br><br>
+                <li>A message will appear letting you know when the transfer is finished. Press any key to exit the window.</li>
+                <img src="Windows_Images/image4.png" width=480 height=300>
+                <br><br>
+                <li>You will find all of your files in a folder labeled “Files from AFS” located in the same location as the tool you downloaded.</li>
+                <img src="Windows_Images/image5.png" width=480 height=300>
+                <br><br>
+
+            </ol>
+        </div>
+
+        <div id="description">
+            <p>This tool makes use of PuTTY to securely transfer files from AFS to a local Windows computer using the SFTP protocol. It is compatible with any computer running Windows XP and up. This application downloads the AFS directory to the directory in which the application is run. Note for power users: this tool will not copy over any dotfiles from the top level directory.</p>
+        </div>
+        <br>
+    </div>
+</body>
+
+</html>

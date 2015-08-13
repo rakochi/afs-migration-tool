@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<!-- Copyright 2015 Michael McGookey, The University of Michigan
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>AFS Migration Tool</title>
+    <style>
+        #itsBanner {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            /*           z-index: -1;*/
+            padding: 20px;
+            width: 100%;
+            background: #00274c;
+            white-space: nowrap;
+        }
+        
+        html * {
+            font-family: Arial !important;
+        }
+        
+        h1 {
+            position: relative;
+            top: 75px;
+        }
+        
+        #text {
+            position: relative;
+            top: 75px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="itsBanner">
+        <a href="index.html"><img src="site_banner.png" alt="AFS Migration Tool" /></a>
+    </div>
+
+    <h1>AFS to OS X</h1>
+
+    <div id="text">
+        <h4>Tutorial:</h4>
+
+
+        <div id="instructions">
+            <ol type=1>
+                <li>Download the application <a href="scripts/Migration_Assistant.zip" target="_blank">here</a>.</li>
+                <br><br>
+                <li>Unzip the file.</li>
+                <br><br>
+                <li>Double click the application. Even if the application is not in the downloads folder, it will still download your files to the Downloads folder.</li>
+                <img src="Tutorial/1.png" height=300 width=700 />
+                <br><br>
+                <li>Certify that you want to run the software.</li>
+                <img src="Tutorial/2.png" height=300 width=700 />
+                <br><br>
+                <li>A terminal window will appear, enter your uniqname as prompted.</li>
+                <img src="Tutorial/3.png" height=300 width=700 />
+                <br><br>
+                <li>You will be asked to verify that you are connecting to a University server if you have not connected to his server before from this computer. Type the word “yes” where prompted.</li>
+                <img src="Tutorial/4.png" height=300 width=700 />
+                <br><br>
+                <li>Enter your password.</li>
+                <img src="Tutorial/5.png" height=300 width=700 />
+                <br><br>
+                <li>All non-hidden files that you have access to in your AFS directory will be copied to your computer.</li>
+                <img src="Tutorial/6.png" height=300 width=700 />
+                <br><br>
+                <li>Your files will appear in a directory with the name matching your uniqname, and this directory will always be in your downloads folder. It will be an exact replica of your AFS directory, minus hidden files.</li>
+                <img src="Tutorial/7.png" height=300 width=700 />
+                <br><br>
+            </ol>
+        </div>
+
+        <div id="description">
+            <p>This tool consists of two scripts, an AppleScript and a Bash script. The Applescript collects the filepath to the current directory, opens a terminal window, and executes the Bash script. The Bash script collects the user’s uniqname, and uses it to open an ssh connection with rsync in order to gain access to the user’s AFS space. The user then must authenticate and acknowledge they are connecting to a University of Michigan server, and then rsync utility will copy the user’s entire AFS space to a directory named their uniqname in their downloads directory. The download can be interrupted at anytime without issue. Simply re-run the application and the download will pick up where it was interrupted.</p>
+        </div>
+
+        <div id="poweruser_notes">
+            <p>Notes for power users: this rsync is run with -p enabled, so that permissions will be preserved. Hidden files are excluded from being copied.
+            </p>
+            <br>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+2015-08-07 12:10:05: Access token obtained
+2015-08-07 12:10:05: configObj initialized
+2015-08-07 12:10:06 Our root folder ID: 0B5itTCjUZfbrM05VRW9NMHZtVGM
+2015-08-07 12:10:06 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo
+2015-08-07 12:10:06 Parent folder ID: 0B5itTCjUZfbrM05VRW9NMHZtVGM
+2015-08-07 12:10:07 The folder name: 270labs
+2015-08-07 12:10:07 The ID of this new folder is: 0B5itTCjUZfbrZUE5T3EzTmp6a1E
+2015-08-07 12:10:07 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs
+2015-08-07 12:10:07 Parent folder ID: 0B5itTCjUZfbrZUE5T3EzTmp6a1E
+2015-08-07 12:10:08 The folder name: four_bit_adder
+2015-08-07 12:10:08 The ID of this new folder is: 0B5itTCjUZfbreHZJZFFHeEpRc1E
+2015-08-07 12:10:08 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder
+2015-08-07 12:10:08 Parent folder ID: 0B5itTCjUZfbreHZJZFFHeEpRc1E
+2015-08-07 12:10:09 The folder name: db
+2015-08-07 12:10:09 The ID of this new folder is: 0B5itTCjUZfbrckl1Z3ZVb2dmNlE
+2015-08-07 12:10:09 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder
+2015-08-07 12:10:09 Parent folder ID: 0B5itTCjUZfbreHZJZFFHeEpRc1E
+2015-08-07 12:10:10 The folder name: incremental_db
+2015-08-07 12:10:10 The ID of this new folder is: 0B5itTCjUZfbrSjBGSFpkUk5KV3c
+2015-08-07 12:10:10 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder/incremental_db
+2015-08-07 12:10:10 Parent folder ID: 0B5itTCjUZfbrSjBGSFpkUk5KV3c
+2015-08-07 12:10:11 The folder name: compiled_partitions
+2015-08-07 12:10:11 The ID of this new folder is: 0B5itTCjUZfbrTXZFazNRVjNTTUU
+2015-08-07 12:10:11 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder
+2015-08-07 12:10:11 Parent folder ID: 0B5itTCjUZfbreHZJZFFHeEpRc1E
+2015-08-07 12:10:12 The folder name: output_files
+2015-08-07 12:10:12 The ID of this new folder is: 0B5itTCjUZfbrdlhPa3puVC15R2M
+2015-08-07 12:10:12 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder
+2015-08-07 12:10:12 Parent folder ID: 0B5itTCjUZfbreHZJZFFHeEpRc1E
+2015-08-07 12:10:13 The folder name: simulation
+2015-08-07 12:10:13 The ID of this new folder is: 0B5itTCjUZfbremJ3MWszanZvejg
+2015-08-07 12:10:13 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder/simulation
+2015-08-07 12:10:13 Parent folder ID: 0B5itTCjUZfbremJ3MWszanZvejg
+2015-08-07 12:10:14 The folder name: modelsim
+2015-08-07 12:10:14 The ID of this new folder is: 0B5itTCjUZfbrcWFaMUQ5bllWOWM
+2015-08-07 12:10:14 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder/simulation/modelsim
+2015-08-07 12:10:14 Parent folder ID: 0B5itTCjUZfbrcWFaMUQ5bllWOWM
+2015-08-07 12:10:15 The folder name: gate_work
+2015-08-07 12:10:15 The ID of this new folder is: 0B5itTCjUZfbrRGF0em9iVzZDd2M
+2015-08-07 12:10:15 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder/simulation/modelsim/gate_work
+2015-08-07 12:10:15 Parent folder ID: 0B5itTCjUZfbrRGF0em9iVzZDd2M
+2015-08-07 12:10:16 The folder name: _temp
+2015-08-07 12:10:16 The ID of this new folder is: 0B5itTCjUZfbrQUpuRHl4LXFfMVk
+2015-08-07 12:10:16 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder/simulation/modelsim/gate_work
+2015-08-07 12:10:16 Parent folder ID: 0B5itTCjUZfbrRGF0em9iVzZDd2M
+2015-08-07 12:10:17 The folder name: four_bit_adder
+2015-08-07 12:10:17 The ID of this new folder is: 0B5itTCjUZfbrVnRnTFFuenF0TUk
+2015-08-07 12:10:17 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/four_bit_adder/simulation/modelsim/gate_work
+2015-08-07 12:10:17 Parent folder ID: 0B5itTCjUZfbrRGF0em9iVzZDd2M
+2015-08-07 12:10:18 The folder name: four_bit_addertb_d1
+2015-08-07 12:10:18 The ID of this new folder is: 0B5itTCjUZfbrSTN4d0F6RWR5aWc
+2015-08-07 12:10:18 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs
+2015-08-07 12:10:18 Parent folder ID: 0B5itTCjUZfbrZUE5T3EzTmp6a1E
+2015-08-07 12:10:19 The folder name: lab1
+2015-08-07 12:10:19 The ID of this new folder is: 0B5itTCjUZfbra2MwOHprWXJ3UVE
+2015-08-07 12:10:19 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1
+2015-08-07 12:10:19 Parent folder ID: 0B5itTCjUZfbra2MwOHprWXJ3UVE
+2015-08-07 12:10:20 The folder name: db
+2015-08-07 12:10:20 The ID of this new folder is: 0B5itTCjUZfbrZ09DSzd3am52S2c
+2015-08-07 12:10:20 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1
+2015-08-07 12:10:20 Parent folder ID: 0B5itTCjUZfbra2MwOHprWXJ3UVE
+2015-08-07 12:10:21 The folder name: incremental_db
+2015-08-07 12:10:21 The ID of this new folder is: 0B5itTCjUZfbrT3hTRTJQSUVObzA
+2015-08-07 12:10:21 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1/incremental_db
+2015-08-07 12:10:21 Parent folder ID: 0B5itTCjUZfbrT3hTRTJQSUVObzA
+2015-08-07 12:10:22 The folder name: compiled_partitions
+2015-08-07 12:10:22 The ID of this new folder is: 0B5itTCjUZfbrNDA5OEhKNjl2YWc
+2015-08-07 12:10:22 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1
+2015-08-07 12:10:22 Parent folder ID: 0B5itTCjUZfbra2MwOHprWXJ3UVE
+2015-08-07 12:10:23 The folder name: output_files
+2015-08-07 12:10:23 The ID of this new folder is: 0B5itTCjUZfbrSExIZmhQVklKYlU
+2015-08-07 12:10:23 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1/output_files
+2015-08-07 12:10:23 Parent folder ID: 0B5itTCjUZfbrSExIZmhQVklKYlU
+2015-08-07 12:10:24 The folder name: output_files
+2015-08-07 12:10:24 The ID of this new folder is: 0B5itTCjUZfbrUkNzZ3dha0VRVkE
+2015-08-07 12:10:24 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1/output_files/output_files
+2015-08-07 12:10:24 Parent folder ID: 0B5itTCjUZfbrUkNzZ3dha0VRVkE
+2015-08-07 12:10:25 The folder name: output_files
+2015-08-07 12:10:25 The ID of this new folder is: 0B5itTCjUZfbrcDB6QXkzUjdaV00
+2015-08-07 12:10:25 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1
+2015-08-07 12:10:25 Parent folder ID: 0B5itTCjUZfbra2MwOHprWXJ3UVE
+2015-08-07 12:10:25 The folder name: simulation
+2015-08-07 12:10:25 The ID of this new folder is: 0B5itTCjUZfbrOFUyTndKQnQ0UkE
+2015-08-07 12:10:25 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1/simulation
+2015-08-07 12:10:25 Parent folder ID: 0B5itTCjUZfbrOFUyTndKQnQ0UkE
+2015-08-07 12:10:26 The folder name: modelsim
+2015-08-07 12:10:26 The ID of this new folder is: 0B5itTCjUZfbrV3hSSElyR19xWVE
+2015-08-07 12:10:26 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1/simulation/modelsim
+2015-08-07 12:10:26 Parent folder ID: 0B5itTCjUZfbrV3hSSElyR19xWVE
+2015-08-07 12:10:27 The folder name: gate_work
+2015-08-07 12:10:27 The ID of this new folder is: 0B5itTCjUZfbrdS1zcGdBX1VrVFk
+2015-08-07 12:10:27 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1/simulation/modelsim/gate_work
+2015-08-07 12:10:27 Parent folder ID: 0B5itTCjUZfbrdS1zcGdBX1VrVFk
+2015-08-07 12:10:28 The folder name: _temp
+2015-08-07 12:10:28 The ID of this new folder is: 0B5itTCjUZfbreVV2NERwNjMycVk
+2015-08-07 12:10:28 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1/simulation/modelsim/gate_work
+2015-08-07 12:10:28 Parent folder ID: 0B5itTCjUZfbrdS1zcGdBX1VrVFk
+2015-08-07 12:10:29 The folder name: lab1
+2015-08-07 12:10:29 The ID of this new folder is: 0B5itTCjUZfbrN0JJT3ZIOV9HbTg
+2015-08-07 12:10:29 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab1/simulation/modelsim/gate_work
+2015-08-07 12:10:29 Parent folder ID: 0B5itTCjUZfbrdS1zcGdBX1VrVFk
+2015-08-07 12:10:30 The folder name: lab1tb
+2015-08-07 12:10:30 The ID of this new folder is: 0B5itTCjUZfbrUVdTZmFNeFkyb2s
+2015-08-07 12:10:30 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs
+2015-08-07 12:10:30 Parent folder ID: 0B5itTCjUZfbrZUE5T3EzTmp6a1E
+2015-08-07 12:10:31 The folder name: lab2xor
+2015-08-07 12:10:31 The ID of this new folder is: 0B5itTCjUZfbrU3A0T3puMWxZRlk
+2015-08-07 12:10:31 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor
+2015-08-07 12:10:31 Parent folder ID: 0B5itTCjUZfbrU3A0T3puMWxZRlk
+2015-08-07 12:10:32 The folder name: db
+2015-08-07 12:10:32 The ID of this new folder is: 0B5itTCjUZfbreFNZVjUtY3k4NDQ
+2015-08-07 12:10:32 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor
+2015-08-07 12:10:32 Parent folder ID: 0B5itTCjUZfbrU3A0T3puMWxZRlk
+2015-08-07 12:10:33 The folder name: incremental_db
+2015-08-07 12:10:33 The ID of this new folder is: 0B5itTCjUZfbrbUFHTGdfZi1OSHM
+2015-08-07 12:10:33 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor/incremental_db
+2015-08-07 12:10:33 Parent folder ID: 0B5itTCjUZfbrbUFHTGdfZi1OSHM
+2015-08-07 12:10:34 The folder name: compiled_partitions
+2015-08-07 12:10:34 The ID of this new folder is: 0B5itTCjUZfbrX0JITnRSTGwtOE0
+2015-08-07 12:10:34 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor
+2015-08-07 12:10:34 Parent folder ID: 0B5itTCjUZfbrU3A0T3puMWxZRlk
+2015-08-07 12:10:35 The folder name: output_files
+2015-08-07 12:10:35 The ID of this new folder is: 0B5itTCjUZfbrdG8zU1BLSmhaLVU
+2015-08-07 12:10:35 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor
+2015-08-07 12:10:35 Parent folder ID: 0B5itTCjUZfbrU3A0T3puMWxZRlk
+2015-08-07 12:10:36 The folder name: simulation
+2015-08-07 12:10:36 The ID of this new folder is: 0B5itTCjUZfbrRWlLTk5DelQ5TDQ
+2015-08-07 12:10:36 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor/simulation
+2015-08-07 12:10:36 Parent folder ID: 0B5itTCjUZfbrRWlLTk5DelQ5TDQ
+2015-08-07 12:10:37 The folder name: modelsim
+2015-08-07 12:10:37 The ID of this new folder is: 0B5itTCjUZfbrMjFKM25LZUc0VHM
+2015-08-07 12:10:37 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor/simulation/modelsim
+2015-08-07 12:10:37 Parent folder ID: 0B5itTCjUZfbrMjFKM25LZUc0VHM
+2015-08-07 12:10:37 The folder name: gate_work
+2015-08-07 12:10:37 The ID of this new folder is: 0B5itTCjUZfbrZlhTNHc0b3dQX3M
+2015-08-07 12:10:37 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor/simulation/modelsim/gate_work
+2015-08-07 12:10:37 Parent folder ID: 0B5itTCjUZfbrZlhTNHc0b3dQX3M
+2015-08-07 12:10:38 The folder name: _temp
+2015-08-07 12:10:38 The ID of this new folder is: 0B5itTCjUZfbrN3p0aGYtX0hub1E
+2015-08-07 12:10:38 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor/simulation/modelsim/gate_work
+2015-08-07 12:10:38 Parent folder ID: 0B5itTCjUZfbrZlhTNHc0b3dQX3M
+2015-08-07 12:10:39 The folder name: lab2xor
+2015-08-07 12:10:39 The ID of this new folder is: 0B5itTCjUZfbrS2Jlc3R6N0pDN00
+2015-08-07 12:10:39 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab2xor/simulation/modelsim/gate_work
+2015-08-07 12:10:39 Parent folder ID: 0B5itTCjUZfbrZlhTNHc0b3dQX3M
+2015-08-07 12:10:40 The folder name: xortb_post
+2015-08-07 12:10:40 The ID of this new folder is: 0B5itTCjUZfbrQjZ6R0ZpN3BLb2s
+2015-08-07 12:10:40 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs
+2015-08-07 12:10:40 Parent folder ID: 0B5itTCjUZfbrZUE5T3EzTmp6a1E
+2015-08-07 12:10:41 The folder name: lab4
+2015-08-07 12:10:41 The ID of this new folder is: 0B5itTCjUZfbrSGlUYmwtcm1pb1k
+2015-08-07 12:10:41 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab4
+2015-08-07 12:10:41 Parent folder ID: 0B5itTCjUZfbrSGlUYmwtcm1pb1k
+2015-08-07 12:10:42 The folder name: db
+2015-08-07 12:10:42 The ID of this new folder is: 0B5itTCjUZfbrZ01VYVRqeHdxWnc
+2015-08-07 12:10:42 Parent folder name: /afs/umich.edu/user/m/i/mikemcgo/270labs/lab4
+2015-08-07 12:10:42 Parent folder ID: 0B5itTCjUZfbrSGlUYmwtcm1pb1k
+2015-08-07 12:10:53 An error occurred: Error calling POST https://www.googleapis.com/drive/v2/files: (500) Internal Error
