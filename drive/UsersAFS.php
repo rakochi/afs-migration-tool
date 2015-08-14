@@ -21,6 +21,9 @@ class UsersAFS
  public  $fileList;  //Array of AFSFile objects created from user's AFS files
  public  $folderList;  //Array of user's folders from AFS
  public  $afsPath;  //Path to user's AFS files
+ public  $numFoldersUploaded; //Numner of Folders Uploaded
+ public  $numFilesUploaded; //Number of Files Uploaded
+ public  $failedFiles; //Array of files that failed to upload
 }
 
 ?>
