@@ -67,16 +67,13 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $UsersAFSObj->folderList = $_SESSION['folderList'];
     $UsersAFSObj->fileList = $_SESSION['fileList'];
     $UsersAFSObj->afsPath = $_SESSION['afsPath'];
-    $UsersAFSObj->failedFolders = array();
-    $UsersAFSObj->failedfiles = array();
+    $UsersAFSObj->failedFiles = array();
 
-    //Unset session variables to save space on server
-    unset($_SESSION['folderList']);
-    unset($_SESSION['fileList']);
-    unset($_SESSION['afsPath']);
+    //Destroy session variables to save space on server
+    session_destroy();
 
     /* Closes browser connection, displays the file on the include line,
-       and runs the last two lines after flush */
+    and runs the last two lines after flush */
 
     // Buffer the upcoming output
     ob_start(); 
@@ -100,13 +97,28 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     createFolders($drive_service, $client, $configObj, $UsersAFSObj);
     uploadFiles($drive_service, $client, $configObj, $UsersAFSObj);
 
+    //Get total files and folders for notification script
+    $totalFolders = count($UsersAFSObj->folderList);
+    $totalFiles = count($UsersAFSObj->fileList);
+    $numFolders = $UsersAFSObj->numFoldersUploaded;
+    $numFiles = $UsersAFSObj->numFilesUploaded;
+    $failedFiles = $UsersAFSObj->failedFiles;
+    $choice = 'drive';
+
     $logline = date('Y-m-d H:i:s') . ": upload complete! \n"; 
     fwrite($configObj->logFile, $logline);
-    }
-    catch (Exception $e)
+
+    include '../notification_email.php';
+
+    if ($totalFolders == $numFolders && $totalFiles == $numFiles)
     {
+      unlink($logfileName);
+    }
+  }
+  catch (Exception $e)
+  {
     echo "An error occurred: " . $e->getMessage();
-    } 
+  } 
 
 }
 else {
