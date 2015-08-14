@@ -28,6 +28,7 @@ function createFolders(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
   
   $afsFilesFolder = createFolder($drive_service, "AFS Migration Files", "Home for migrated files", "root", $configObj);
   $UsersAFSObj->folderList[$UsersAFSObj->afsPath] = $afsFilesFolder->getID();
+  ++$UsersAFSObj->numFoldersUploaded;
   $logline = date('Y-m-d H:i:s') . " User's AFS Path: " . $UsersAFSObj->afsPath . "\n"; 
   $logline = date('Y-m-d H:i:s') . " Our root folder ID: " . $UsersAFSObj->folderList[$UsersAFSObj->afsPath] . "\n"; 
   fwrite($configObj->logFile, $logline);
@@ -71,6 +72,7 @@ function createFolders(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
     if ($folder)
     {
       //If creation worked, store folder ID for the file uploads
+      ++$UsersAFSObj->numFoldersUploaded;
       $UsersAFSObj->folderList[$key] = $folder->getID();
       $logline = $logline . date('Y-m-d H:i:s') . " Success! The ID of this new folder is: " . $folder->getID()  . "\n"; 
       fwrite($configObj->logFile, $logline); 
@@ -121,8 +123,8 @@ function doUpload(&$drive_service, &$client, &$file, &$parentFolderID, &$configO
         $logline = date('Y-m-d H:i:s'). ": Unable to upload file.\n";
         $logline = $logline . "Reason: " . $e->getCode() . " : " . $e->getMessage() . "\n";
         fwrite($configObj->logFile, $logline);
-        // Other error, re-throw.
-        //throw $e;
+        //If upload failed because of unrecognized error, return the file
+        return file;
     }
   }
   //If upload failed, return the file
@@ -137,6 +139,8 @@ function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
         fwrite($configObj->logFile, $logline);
         // Make sure the file still exists in AFS 
         if (!file_exists($value->path)) { 
+            $logline = date('Y-m-d H:i:s') . " Upload failed.  File does not exist!" . "\n"; 
+            fwrite($configObj->logFile, $logline);
             continue; 
         } 
  
@@ -147,6 +151,8 @@ function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
 
         // If it couldn't find the parent folder's ID, skip this file 
         if ($parentFolderID == null) { 
+            $logline = date('Y-m-d H:i:s') . " Upload failed.  No parent ID for parent folder!" . "\n"; 
+            fwrite($configObj->logFile, $logline);
             continue; 
         } 
 
@@ -174,12 +180,13 @@ function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
          
          if ($results)
          {
-           //array_push($configObj->failedFilesArray, 
+           array_push($UsersAFSObj->failedFiles, $value->path);
            $logline = date('Y-m-d H:i:s') . " Failure" . "\n"; 
            fwrite($configObj->logFile, $logline);
          }
          else
          {
+           ++$UsersAFSObj->numFilesUploaded;
            $logline = date('Y-m-d H:i:s') . " Success!" . "\n"; 
            fwrite($configObj->logFile, $logline);
          }
@@ -311,8 +318,8 @@ function createFolder(&$service, $title, $description, $parentId, &$configObj)
         $logline = date('Y-m-d H:i:s'). "Unable to create folder.\n";
         $logline = $logline . "Reason: " . $e->getCode() . " : " . $e->getMessage() . "\n";
         fwrite($configObj->logFile, $logline);
-        // Other error, re-throw.
-        //throw $e;
+        //If unable to create folder because of unrecognized error, return nothing
+        return null; 
     }
   }
 }
