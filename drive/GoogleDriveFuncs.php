@@ -102,9 +102,10 @@ function doUpload(&$drive_service, &$client, &$file, &$parentFolderID, &$configO
       {
         insertFileMedia($drive_service, getFileName($file->path), "", $parentFolderID, $file->type, $file->path, $configObj);
       }
+      //If upload succeeded, return null
       return;
     } 
-    catch (apiServiceException $e) 
+    catch (Google_Exception $e) 
     {
       if ($e->getCode() == 403 || $e->getCode() == 503) 
       {
@@ -117,13 +118,15 @@ function doUpload(&$drive_service, &$client, &$file, &$parentFolderID, &$configO
     } 
     catch (Exception $e)
     {
-        $logline = date('Y-m-d H:i:s'). "Unable to upload file.\n";
+        $logline = date('Y-m-d H:i:s'). ": Unable to upload file.\n";
         $logline = $logline . "Reason: " . $e->getCode() . " : " . $e->getMessage() . "\n";
         fwrite($configObj->logFile, $logline);
         // Other error, re-throw.
-        throw $e;
+        //throw $e;
     }
   }
+  //If upload failed, return the file
+  return file;
 }
 
 function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj) 
@@ -292,7 +295,7 @@ function createFolder(&$service, $title, $description, $parentId, &$configObj)
       return $createdFile;
 
     } 
-    catch (apiServiceException $e) 
+    catch (Google_Exception $e) 
     {
       if ($e->getCode() == 403 || $e->getCode() == 503) 
       {
@@ -309,7 +312,7 @@ function createFolder(&$service, $title, $description, $parentId, &$configObj)
         $logline = $logline . "Reason: " . $e->getCode() . " : " . $e->getMessage() . "\n";
         fwrite($configObj->logFile, $logline);
         // Other error, re-throw.
-        throw $e;
+        //throw $e;
     }
   }
 }
