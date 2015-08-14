@@ -31,8 +31,6 @@ function createFolders(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
   $logline = date('Y-m-d H:i:s') . " User's AFS Path: " . $UsersAFSObj->afsPath . "\n"; 
   $logline = date('Y-m-d H:i:s') . " Our root folder ID: " . $UsersAFSObj->folderList[$UsersAFSObj->afsPath] . "\n"; 
   fwrite($configObj->logFile, $logline);
-
-  $numFolders = 0;
   
   foreach ($UsersAFSObj->folderList as $key => $value) 
   {
@@ -47,14 +45,12 @@ function createFolders(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
     continue; 
     } 
     
-     // See if the access token is about to expire
-    //will need to add this in
-    
     $parentFolderID = $UsersAFSObj->folderList[getParentFolder($key)];
     $logline = date('Y-m-d H:i:s') . " Parent folder name: " . getParentFolder($key) . "\n"; 
     $logline = $logline . date('Y-m-d H:i:s') . " Parent folder ID: " . $parentFolderID . "\n"; 
     fwrite($configObj->logFile, $logline);
 
+    // See if the access token is about to expire
     if ($client->isAccessTokenExpired())
      {
         //Make sure we can read refresh token from .csv
@@ -69,25 +65,22 @@ function createFolders(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
      }
  
    //Create folder 
+    $logline = date('Y-m-d H:i:s') . " The folder name: " . getFileName($key) . "\n"; 
     $folder = createFolder($drive_service, getFileName($key), "", $parentFolderID, $configObj);
-    $nextID = $folder->getID(); 
 
-    if (!is_array($nextID)) 
+    if ($folder)
     {
-       $UsersAFSObj->folderList[$key] = $nextID;
-       $numFolders++;
-       
-       $logline = date('Y-m-d H:i:s') . " The folder name: " . getFileName($key) . "\n"; 
-       $logline = $logline . date('Y-m-d H:i:s') . " The ID of this new folder is: " . $nextID . "\n"; 
-       fwrite($configObj->logFile, $logline);
+      //If creation worked, store folder ID for the file uploads
+      $UsersAFSObj->folderList[$key] = $folder->getID();
+      $logline = $logline . date('Y-m-d H:i:s') . " Success! The ID of this new folder is: " . $folder->getID()  . "\n"; 
+      fwrite($configObj->logFile, $logline); 
     }
     else
     {
-      $logline = date('Y-m-d H:i:s') . " There was an error creating this folder \n"; 
-      fwrite($configObj->logFile, $logline);
+      $logline = $logline . date('Y-m-d H:i:s') . " The following folder could not be created: " . $folder->getID()  . "\n"; 
+      fwrite($configObj->logFile, $logline); 
     }
   }
-
 }
 
 function doUpload(&$drive_service, &$client, &$file, &$parentFolderID, &$configObj)
@@ -95,16 +88,42 @@ function doUpload(&$drive_service, &$client, &$file, &$parentFolderID, &$configO
   //Chunk size is in bytes
   //Currently, resumable upload uses chunks of 1000 bytes 
   $chunk_size = 1000; 
-
-  //Choose between media and resumable depending on file size 
-   if ($file->size > $chunk_size)
-   {
-     insertFileResumable($drive_service, &$client, getFileName($file->path), "", $parentFolderID, $file->type, $file->path, $configObj);
-   }
-   else
-   {
-     insertFileMedia($drive_service, getFileName($file->path), "", $parentFolderID, $file->type, $file->path, $configObj);
-   } 
+  //doUpload with exponential backoff, five tries
+  for ($n = 0; $n < 5; ++$n) 
+  {
+    try 
+    {
+      //Choose between media and resumable depending on file size 
+      if ($file->size > $chunk_size)
+      {
+        insertFileResumable($drive_service, &$client, getFileName($file->path), "", $parentFolderID, $file->type, $file->path, $configObj);
+      }
+      else
+      {
+        insertFileMedia($drive_service, getFileName($file->path), "", $parentFolderID, $file->type, $file->path, $configObj);
+      }
+      return;
+    } 
+    catch (apiServiceException $e) 
+    {
+      if ($e->getCode() == 403 || $e->getCode() == 503) 
+      {
+        $logline = date('Y-m-d H:i:s') . " Error: " . $e->getMessage() . "\n"; 
+        $logline = $logline . date('Y-m-d H:i:s'). "Retrying... \n";
+        fwrite($configObj->logFile, $logline);
+        // Apply exponential backoff.
+        usleep((1 << $n) * 1000000 + rand(0, 1000000));
+      }
+    } 
+    catch (Exception $e)
+    {
+        $logline = date('Y-m-d H:i:s'). "Unable to upload file.\n";
+        $logline = $logline . "Reason: " . $e->getCode() . " : " . $e->getMessage() . "\n";
+        fwrite($configObj->logFile, $logline);
+        // Other error, re-throw.
+        throw $e;
+    }
+  }
 }
 
 function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj) 
@@ -117,9 +136,6 @@ function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
         if (!file_exists($value->path)) { 
             continue; 
         } 
-
-        //check if token expired
-        //insert code here
  
         $parentFolderID = $UsersAFSObj->folderList[getParentFolder($value->path)]; 
         $logline = date('Y-m-d H:i:s') . " Parent folder name: " . $value->path . "\n"; 
@@ -150,112 +166,30 @@ function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
         //make a config file for the chunk size?
          $logline = date('Y-m-d H:i:s') . " Doing upload..." . "\n"; 
          fwrite($configObj->logFile, $logline);
-         doUpload($drive_service, $client, $value, $parentFolderID, $configObj);
- 
-        // If the API call returns an error, handle and retry it if possible 
-
-        // Check to see if the file upload was successfull  
+         
+         $results = doUpload($drive_service, $client, $value, $parentFolderID, $configObj);
+         
+         if ($results)
+         {
+           //array_push($configObj->failedFilesArray, 
+           $logline = date('Y-m-d H:i:s') . " Failure" . "\n"; 
+           fwrite($configObj->logFile, $logline);
+         }
+         else
+         {
+           $logline = date('Y-m-d H:i:s') . " Success!" . "\n"; 
+           fwrite($configObj->logFile, $logline);
+         }
    }
 } 
 
-function insertFileMedia($service, $title, $description, $parentId, $mimeType, $filename, &$configObj) {
+function insertFileMedia(&$service, $title, $description, $parentId, $mimeType, $filename, &$configObj) 
+{
   $file = new Google_Service_Drive_DriveFile();
   $file->setTitle($title);
   $file->setDescription($description);
   $file->setMimeType($mimeType);
     
-  // Set the parent folder.
-  if ($parentId != null) {
-    $parent = new Google_Service_Drive_ParentReference();
-    $parent->setId($parentId);
-    $file->setParents(array($parent));
-  }
-
-  try {
-    $data = file_get_contents($filename);
-
-    $createdFile = $service->files->insert($file, array(
-      'data' => $data,
-      'mimeType' => $mimeType,
-      'uploadType' => 'media',
-    ));
-    
-    // Uncomment the following line to print the File ID
-    // print 'File ID: %s' % $createdFile->getId();
-
-    return;
-  } catch (Exception $e) {
-    $logline = date('Y-m-d H:i:s') . " An error occurred: " . $e->getMessage() . "\n"; 
-    fwrite($configObj->logFile, $logline);
-  } 
-}
-
-
-function insertFileResumable($service, &$client, $title, $description, $parentId, $mimeType, $filepath, &$configObj) {
-
-$file = new Google_Service_Drive_DriveFile();
-$file->setTitle($title);
-$file->setDescription($description);
-$file->setMimeType($mimeType);
-$chunkSizeBytes = 1 * 1024 * 1024;
-
-if ($parentId != null) {
-  $parent = new Google_Service_Drive_ParentReference();
-  $parent->setId($parentId);
-  $file->setParents(array($parent));
-}
-
-try
-{
-  // Call the API with the media upload, defer so it doesn't immediately return.
-  $client->setDefer(true);
-  $request = $service->files->insert($file);
-
-  // Create a media file upload to represent our upload process.
-  $media = new Google_Http_MediaFileUpload(
-    $client,
-    $request,
-    $mimeType, 
-    file_get_contents($filepath),
-    true,
-    $chunkSizeBytes
-  );
-  $media->setFileSize(filesize($filepath));
-
-  // Upload the various chunks. $status will be false until the process is
-  // complete.
-  $status = false;
-  $handle = fopen($filepath, "rb");
-  while (!$status && !feof($handle)) {
-    $chunk = fread($handle, $chunkSizeBytes);
-    $status = $media->nextChunk($chunk);
-   }
-
-  // The final value of $status will be the data from the API for the object
-  // that has been uploaded.
-  $result = false;
-  if($status != false) {
-    $result = $status;
-  }
-
-  fclose($handle);
-  // Reset to the client to execute requests immediately in the future.
-  $client->setDefer(false);
-}
-catch (Exception $e)
-{
-  $logline = date('Y-m-d H:i:s') . " An error occurred: " . $e->getMessage() . "\n"; 
-  fwrite($configObj->logFile, $logline);
-}
-
-}
-
-function createFolder($service, $title, $description, $parentId = "root", &$configObj) {
-  $file = new Google_Service_Drive_DriveFile();
-  $file->setTitle($title);
-  $file->setDescription($description);
-  $file->setMimeType("application/vnd.google-apps.folder");
-
   // Set the parent folder.
   if ($parentId != null) 
   {
@@ -264,18 +198,119 @@ function createFolder($service, $title, $description, $parentId = "root", &$conf
     $file->setParents(array($parent));
   }
 
-  try {
-//    $data = file_get_contents($filename);
+  $data = file_get_contents($filename);
 
-    $createdFile = $service->files->insert($file, array());
+  $createdFile = $service->files->insert($file, array(
+    'data' => $data,
+    'mimeType' => $mimeType,
+    'uploadType' => 'media',
+  ));
 
-    // Uncomment the following line to print the File ID
-    // print 'File ID: %s' % $createdFile->getId();
+  return;
+}
 
-    return $createdFile;
-  } catch (Exception $e) {
-    $logline = date('Y-m-d H:i:s') . " An error occurred: " . $e->getMessage() . "\n"; 
-    fwrite($configObj->logFile, $logline);
+
+function insertFileResumable(&$service, &$client, $title, $description, $parentId, $mimeType, $filepath, &$configObj) {
+
+  $file = new Google_Service_Drive_DriveFile();
+  $file->setTitle($title);
+  $file->setDescription($description);
+  $file->setMimeType($mimeType);
+  $chunkSizeBytes = 1 * 1024 * 1024;
+
+  if ($parentId != null) 
+  {
+    $parent = new Google_Service_Drive_ParentReference();
+    $parent->setId($parentId);
+    $file->setParents(array($parent));
+  }
+
+  // Call the API with the media upload, defer so it doesn't immediately return.
+  $client->setDefer(true);
+  $request = $service->files->insert($file);
+
+  // Create a media file upload to represent our upload process.
+  $media = new Google_Http_MediaFileUpload
+  (
+  $client,
+  $request,
+  $mimeType, 
+  file_get_contents($filepath),
+  true,
+  $chunkSizeBytes
+  );
+  $media->setFileSize(filesize($filepath));
+
+  // Upload the various chunks. $status will be false until the process is
+  // complete.
+  $status = false;
+  $handle = fopen($filepath, "rb");
+  while (!$status && !feof($handle)) 
+  {
+    $chunk = fread($handle, $chunkSizeBytes);
+    $status = $media->nextChunk($chunk);
+  }
+
+  // The final value of $status will be the data from the API for the object
+  // that has been uploaded.
+  $result = false;
+  if ($status != false) 
+  {
+    $result = $status;
+  }
+
+  fclose($handle);
+  // Reset to the client to execute requests immediately in the future.
+  $client->setDefer(false);
+
+  return;
+
+}
+
+function createFolder(&$service, $title, $description, $parentId, &$configObj) 
+{
+
+  for ($n = 0; $n < 5; ++$n) 
+  {
+    try 
+    {
+   
+      $file = new Google_Service_Drive_DriveFile();
+      $file->setTitle($title);
+      $file->setDescription($description);
+      $file->setMimeType("application/vnd.google-apps.folder");
+
+      // Set the parent folder.
+      if ($parentId != null) 
+      {
+        $parent = new Google_Service_Drive_ParentReference();
+        $parent->setId($parentId);
+        $file->setParents(array($parent));
+      }
+
+      $createdFile = $service->files->insert($file, array());
+      return $createdFile;
+
+    } 
+    catch (apiServiceException $e) 
+    {
+      if ($e->getCode() == 403 || $e->getCode() == 503) 
+      {
+        $logline = date('Y-m-d H:i:s') . " Error: " . $e->getMessage() . "\n"; 
+        $logline = $logline . date('Y-m-d H:i:s'). "Retrying... \n";
+        fwrite($configObj->logFile, $logline);
+        // Apply exponential backoff.
+        usleep((1 << $n) * 1000000 + rand(0, 1000000));
+      } 
+    }
+    catch (Exception $e)
+    {
+        $logline = date('Y-m-d H:i:s'). "Unable to create folder.\n";
+        $logline = $logline . "Reason: " . $e->getCode() . " : " . $e->getMessage() . "\n";
+        fwrite($configObj->logFile, $logline);
+        // Other error, re-throw.
+        throw $e;
+    }
   }
 }
 ?> 

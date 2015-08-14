@@ -61,44 +61,52 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $logline = date('Y-m-d H:i:s') . ": configObj initialized" . "\n"; 
     fwrite($configObj->logFile, $logline);
 
-   $drive_service = new Google_Service_Drive($client);
+    $drive_service = new Google_Service_Drive($client);
 
-   $UsersAFSObj = new UsersAFS;
-   $UsersAFSObj->folderList = $_SESSION['folderList'];
-   $UsersAFSObj->fileList = $_SESSION['fileList'];
-   $UsersAFSObj->afsPath = $_SESSION['afsPath'];
+    $UsersAFSObj = new UsersAFS;
+    $UsersAFSObj->folderList = $_SESSION['folderList'];
+    $UsersAFSObj->fileList = $_SESSION['fileList'];
+    $UsersAFSObj->afsPath = $_SESSION['afsPath'];
+    $UsersAFSObj->failedFolders = array();
+    $UsersAFSObj->failedfiles = array();
 
-  // Closes browser connection, displays the file on the include line,
-  // and runs the last two lines after flush
+    //Unset session variables to save space on server
+    unset($_SESSION['folderList']);
+    unset($_SESSION['fileList']);
+    unset($_SESSION['afsPath']);
 
-	// Buffer the upcoming output
-	ob_start(); 
+    /* Closes browser connection, displays the file on the include line,
+       and runs the last two lines after flush */
 
-	include '../request_submitted.html';
+    // Buffer the upcoming output
+    ob_start(); 
 
-  // Get the size of the output
-	$outputSize = ob_get_length();
+    include '../request_submitted.html';
 
-	// Send telling the browser to close the connection
-	header("Content-Encoding: none\r\n");
-	header("Content-Length: $outputSize");
-	header("Connection: close\r\n");
+    // Get the size of the output
+    $outputSize = ob_get_length();
 
-	// Flush all output
-        ob_end_flush();
-        ob_flush();
-        flush();
+    // Send telling the browser to close the connection
+    header("Content-Encoding: none\r\n");
+    header("Content-Length: $outputSize");
+    header("Connection: close\r\n");
 
+    // Flush all output
+    ob_end_flush();
+    ob_flush();
+    flush();
+
+    //Creating folders and uploading files in the background
     createFolders($drive_service, $client, $configObj, $UsersAFSObj);
     uploadFiles($drive_service, $client, $configObj, $UsersAFSObj);
 
-  }
-  catch (Exception $e)
-  {
+    $logline = date('Y-m-d H:i:s') . ": upload complete! \n"; 
+    fwrite($configObj->logFile, $logline);
+    }
+    catch (Exception $e)
+    {
     echo "An error occurred: " . $e->getMessage();
-  } 
-
-//session_destroy();
+    } 
 
 }
 else {
@@ -106,7 +114,6 @@ else {
   header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
-echo "<br> all of script";
 ?>
 </body>
 </html>
