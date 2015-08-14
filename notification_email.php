@@ -1,19 +1,5 @@
 <?php
 
-/* Copyright 2015 Hassan Mahmood, The University of Michigan
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License. */
-
 	// Check which cloud service they uploaded to
 	if ($choice == 'drive') {
 		$cloudProvider = "Google Drive";
@@ -35,19 +21,29 @@ limitations under the License. */
 			"You can access your files by logging in to the {$cloudProvider} website at {$cloudURL}.\r\n" .
 			"Please do not reply to this email.\r\n";
 	}
+	else if ($numFiles == 0 and $numFolders == 0) {
+		$message = "Unfortunately, we were unable to upload any of your files to {$cloudProvider}.\r\n" .
+			"You can still access all of your files through mFile at mfile.umich.edu\r\n" .
+			"Please do not reply to this email.\r\n";
+	}
 	else {
-		$message = "Unfortunately, we were unable to upload all of your files to {$cloudProvider}.\r\n" .
+		if (isset($failedFiles))
+		{
+		  $failedMessage = "The following files have failed: \n" . 
+		  print_r($failedFiles, true) . "\n";
+		}
+		else
+		{
+			$failedMessage = "";
+		}
+		$message = $failedMessage . "Unfortunately, we were unable to upload all of your files to {$cloudProvider}.\r\n" .
 			"We successfully uploaded {$numFolders} out of {$totalFolders} folders and {$numFiles} out of {$totalFiles} files.\r\n" .
 			"You can still access all of the original files through mFile at mfile.umich.edu\r\n" .
 			"You can access the uploaded files by logging in to the {$cloudProvider} website at {$cloudURL}.\r\n" .
 			"Please do not reply to this email.\r\n";
 	}
 
-	if ($numFiles == 0 and $numFolders == 0) {
-		$message = "Unfortunately, we were unable to upload any of your files to {$cloudProvider}.\r\n" .
-			"You can still access all of your files through mFile at mfile.umich.edu\r\n" .
-			"Please do not reply to this email.\r\n";
-	}
+	
 
 	// Get the user's email address
 	$email = $_SERVER["REMOTE_USER"] . "@umich.edu";
