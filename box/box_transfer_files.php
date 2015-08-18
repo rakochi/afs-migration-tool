@@ -1,16 +1,5 @@
 <?php
 
-	/* Copyright 2015 Hassan Mahmood, The University of Michigan
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-	    http://www.apache.org/licenses/LICENSE-2.0
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License. */
-
 	$numFolders = 0;
 	$numFiles = 0;
 	$totalFolders = count($folderList);
@@ -353,8 +342,9 @@
 		}
 
 		if (strcmp($boxError['code'], "item_name_in_use") == 0) {
-			// If the file/folder with this name has already been uploaded, don't retry
-			return;
+			// If there is already a file/folder with this name, change the filename
+			$newName = "_" . $fileName;
+			$boxError = createfile($newName, $parentID, $path, $isFile, $accessToken, $stringArray);
 		}
 		else if (strcmp($boxError['code'], "item_name_invalid") == 0) {
 			// If the name is invalid, remove any invalid characters
