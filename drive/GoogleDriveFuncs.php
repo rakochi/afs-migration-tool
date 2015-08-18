@@ -245,7 +245,7 @@ function insertFileResumable(&$service, &$client, $title, $description, $parentI
   $client,
   $request,
   $mimeType, 
-  file_get_contents($filepath),
+  null,
   true,
   $chunkSizeBytes
   );
