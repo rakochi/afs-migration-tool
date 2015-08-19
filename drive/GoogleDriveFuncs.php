@@ -124,11 +124,11 @@ function doUpload(&$drive_service, &$client, &$file, &$parentFolderID, &$configO
         $logline = $logline . "Reason: " . $e->getCode() . " : " . $e->getMessage() . "\n";
         fwrite($configObj->logFile, $logline);
         //If upload failed because of unrecognized error, return the file
-        return file;
+        return $file;
     }
   }
   //If upload failed, return the file
-  return file;
+  return $file;
 }
 
 function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj) 
@@ -257,16 +257,31 @@ function insertFileResumable(&$service, &$client, $title, $description, $parentI
   $handle = fopen($filepath, "rb");
   while (!$status && !feof($handle)) 
   {
-    $chunk = fread($handle, $chunkSizeBytes);
-    $status = $media->nextChunk($chunk);
-  }
-
-  // The final value of $status will be the data from the API for the object
-  // that has been uploaded.
-  $result = false;
-  if ($status != false) 
-  {
-    $result = $status;
+    for ($n = 0; $n < 5; ++$n)
+    {
+      try
+      {
+        $chunk = fread($handle, $chunkSizeBytes);
+        $status = $media->nextChunk($chunk);
+        break;
+      }
+      catch
+      {
+        if ($e->getCode() == 403 || $e->getCode() == 503)
+        {
+          $logline = date('Y-m-d H:i:s') . " Error: " . $e->getMessage() . "\n"; 
+          $logline = $logline . date('Y-m-d H:i:s'). "Retrying... \n";
+          fwrite($configObj->logFile, $logline);
+          usleep((1 << $n) * 1000000 + rand(0, 1000000));
+        }
+        else
+        {
+          $logline = date('Y-m-d H:i:s') . " Error: " . $e->getMessage() . "\n"; 
+          fwrite($configObj->logFile, $logline);
+          throw $e;
+        }
+      }
+    }
   }
 
   fclose($handle);
