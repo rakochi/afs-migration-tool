@@ -265,7 +265,7 @@ function insertFileResumable(&$service, &$client, $title, $description, $parentI
         $status = $media->nextChunk($chunk);
         break;
       }
-      catch
+      catch(Google_Exception $e)
       {
         if ($e->getCode() == 403 || $e->getCode() == 503)
         {
@@ -274,12 +274,12 @@ function insertFileResumable(&$service, &$client, $title, $description, $parentI
           fwrite($configObj->logFile, $logline);
           usleep((1 << $n) * 1000000 + rand(0, 1000000));
         }
-        else
-        {
+      }
+      catch(Exception $e)
+      {
           $logline = date('Y-m-d H:i:s') . " Error: " . $e->getMessage() . "\n"; 
           fwrite($configObj->logFile, $logline);
           throw $e;
-        }
       }
     }
   }
