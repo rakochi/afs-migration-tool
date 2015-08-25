@@ -29,15 +29,18 @@ $client->addScope(Google_Service_Drive::DRIVE);
 $client->setAccessType('offline');
 $client->setPrompt('select_account');
 
-
+//If user denies authorization
 if (isset($_GET['error']))
 {
+  //Redirect user to error page
   $_SESSION['error'] = "You must allow this tool to access Drive in one of your gmail accounts for this tool to work. " . 
                        "Please <a href='Cloud.php'>try again</a>."; 
   header('Location: ' . 'https://' . $_SERVER['HTTP_HOST'] . '/afsmigrator/error_page.php');
 }
+//If user accepts, but authorization has not yet occurred
 else if (! isset($_GET['code'])) 
 {
+  //Create and send auth url
   $auth_url = $client->createAuthUrl();
   header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
 } 
