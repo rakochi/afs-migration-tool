@@ -27,8 +27,16 @@ $client->setAuthConfigFile('../../Private/drive_credentials.json');
 $client->setRedirectUri('https://' . $_SERVER['HTTP_HOST'] . '/afsmigrator/drive/drive_auth.php');
 $client->addScope(Google_Service_Drive::DRIVE);
 $client->setAccessType('offline');
+$client->setPrompt('select_account');
 
-if (! isset($_GET['code']) && get_stored_refreshtoken($filename, $_SESSION['uniqname']) == null) 
+
+if (isset($_GET['error']))
+{
+  $_SESSION['error'] = "You must allow this tool to access Drive in one of your gmail accounts for this tool to work. " . 
+                       "Please <a href='Cloud.php'>try again</a>."; 
+  header('Location: ' . 'https://' . $_SERVER['HTTP_HOST'] . '/afsmigrator/error_page.php');
+}
+else if (! isset($_GET['code'])) 
 {
   $auth_url = $client->createAuthUrl();
   header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
@@ -37,9 +45,6 @@ else
 {
   try
   {
-    //If we do not have access token or refresh token, request one
-    if ($client->getAccessToken() == null && get_stored_refreshtoken($filename, $_SESSION['uniqname']) == null) 
-    {
       //Trade authorization code for access and refresh token
       $client->authenticate($_GET['code']);
       //Save refresh token to .csv
@@ -55,21 +60,6 @@ else
       {
         die("Refresh Token could not be saved.  Try again.");
       }
-    }
-    //If access token expired, request new one using refresh token
-    elseif ($client->isAccessTokenExpired()) 
-    {
-
-      //Make sure we can read refresh token from .csv
-      if (get_stored_refreshtoken($filename, $_SESSION['uniqname']) == null)
-      {
-        die("Refresh Token could not be loaded.  Try revoking access for this script and try again."); 
-      }
-      //Trade access token for refresh token 
-      $client->refreshToken(get_stored_refreshtoken($filename, $_SESSION['uniqname']));
-      $trade_string = "Token exhange occured:" . $_SESSION['uniqname'] . date('Y-m-d H:i:s') . "\n";
-      file_put_contents($filename, $trade_string, FILE_APPEND | LOCK_EX);
-   } 
     //Store access token as session variable and redirect to main script
     $_SESSION['access_token'] = $client->getAccessToken();
     $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . '/afsmigrator/drive/upload_to_drive.php';
