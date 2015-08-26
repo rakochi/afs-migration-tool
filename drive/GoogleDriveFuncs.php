@@ -145,6 +145,7 @@ function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
     // Make sure the file still exists in AFS 
     if (!file_exists($value->path)) 
     { 
+        array_push($UsersAFSObj->failedFiles, $value->path);
         $logline = date('Y-m-d H:i:s') . " Upload failed.  File does not exist!" . "\n"; 
         fwrite($configObj->logFile, $logline);
         continue; 
