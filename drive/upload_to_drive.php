@@ -55,7 +55,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 
     $configObj = new ConfigItems;
     $configObj->logFile = $myLogFile;
-    $configObj->refreshTokenFilename = "../../Private/refresh.csv";
+    $configObj->refreshToken = $_SESSION['refresh_token'];
     $configObj->uniqname = $_SERVER["REMOTE_USER"];
 
     $logline = date('Y-m-d H:i:s') . ": configObj initialized" . "\n"; 
@@ -73,7 +73,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     session_destroy();
 
     /* Closes browser connection, displays the file on the include line,
-    and runs the last two lines after flush */
+    and runs the lines after the flush server-side */
 
     // Buffer the upcoming output
     ob_start(); 
@@ -108,12 +108,18 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $logline = date('Y-m-d H:i:s') . ": upload complete! \n"; 
     fwrite($configObj->logFile, $logline);
 
+    //Send user an email with the results of the transfer
     include '../notification_email.php';
 
     if ($totalFolders == $numFolders && $totalFiles == $numFiles)
     {
-      unlink($logfileName);
-    }
+        //Delete log file if upload was successful
+        unlink($logfileName);
+    } 
+
+    //Revoke access token
+    $client->revokeToken($configObj->refreshToken);
+  
   }
   catch (Exception $e)
   {
@@ -121,7 +127,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
   } 
 
 }
-else {
+else 
+{
   $redirect_uri = 'https://mfile-test.www.umich.edu/afsmigrator/drive/drive_auth.php';
   header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
