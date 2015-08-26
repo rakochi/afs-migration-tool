@@ -1,15 +1,18 @@
 <?php
 
 	// Check which cloud service they uploaded to
-	if ($choice == 'drive') {
+	if ($choice == 'drive') 
+	{
 		$cloudProvider = "Google Drive";
 		$cloudURL = "https://drive.google.com/a/umich.edu/";
 	}
-	else if ($choice == 'box') {
+	else if ($choice == 'box') 
+	{
 		$cloudProvider = "Box";
 		$cloudURL = "https://umich.box.com";
 	}
-	else {
+	else 
+	{
 		$cloudProvider = "";
 		$cloudURL = "";
 	}
@@ -26,11 +29,23 @@
 			"You can still access all of your files through mFile at mfile.umich.edu\r\n" .
 			"Please do not reply to this email.\r\n";
 	}
-	else {
+	else 
+	{
+
 		if (isset($failedFiles))
 		{
-		  $failedMessage = "The following files have failed: \n" . 
-		  print_r($failedFiles, true) . "\n";
+
+            $failedFilesMessage = "";
+
+			$max_results = (count($failedFiles) < 50) ? count($failedFiles) : 50;
+
+			for ($i = 0; $i < $max_results; $i++)
+			{
+			  $failedFilesMessage = $failedFilesMessage . implode("/", array_slice(explode("/", $failedFiles[$i]), 7)) . "\n";
+			}
+
+		    $failedMessage = "The following files have failed: \n\n" . $failedFilesMessage . "\n\n";
+
 		}
 		else
 		{
