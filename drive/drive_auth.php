@@ -49,26 +49,23 @@ else
 {
   try
   {
-      //Trade authorization code for access and refresh token
-      $client->authenticate($_GET['code']);
-      //Save refresh token to .csv
-      $refresh_token = $client->getRefreshToken();
-      if (!$refresh_token)
-      {
-        die("No refresh token generated.  Please contact support."); 
-      }
-      $refresh_string =  $_SESSION['uniqname'] . ", " . $refresh_token . "\n";
-      file_put_contents($filename, $refresh_string, FILE_APPEND | LOCK_EX);
-      //Check that save was successful
-      if (get_stored_refreshtoken($filename, $_SESSION['uniqname']) == null)
-      {
-        die("Refresh Token could not be saved.  Try again.");
-      }
+    //Trade authorization code for access and refresh token
+    $client->authenticate($_GET['code']);
+    //Save refresh token to .csv
+    $_SESSION['refresh_token'] = $client->getRefreshToken();
+    if (!$_SESSION['refresh_token'])
+    {
+        $_SESSION['error'] = "Refresh token could not be generated." .
+                            "Please revoke access to this app <a href='https://security.google.com/settings/security/permissions?pli=1'>here</> and " . 
+                            "then <a href='Cloud.php'>try again</a>."; 
+        header('Location: ' . 'https://' . $_SERVER['HTTP_HOST'] . '/afsmigrator/error_page.php');
+        die(); 
+    }
     //Store access token as session variable and redirect to main script
     $_SESSION['access_token'] = $client->getAccessToken();
     $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . '/afsmigrator/drive/upload_to_drive.php';
     header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-  
+
   }
   catch (Exception $e)
   {
