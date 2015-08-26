@@ -57,7 +57,7 @@ function createFolders(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
     if ($client->isAccessTokenExpired())
     {
       //Trade access token for refresh token
-      if ($client->refreshToken($configObj->refreshToken))
+      if ($client->refreshToken($configObj->refreshToken) == null)
       {
         $logline = date('Y-m-d H:i:s') . ": Using refresh token, access token granted. \n"; 
         fwrite($configObj->logFile, $logline);
@@ -167,7 +167,7 @@ function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
     if ($client->isAccessTokenExpired())
     {
       //Trade access token for refresh token
-      if ($client->refreshToken($configObj->refreshToken))
+      if ($client->refreshToken($configObj->refreshToken) == null)
       {
         $logline = date('Y-m-d H:i:s') . ": Using refresh token, access token granted. \n"; 
         fwrite($configObj->logFile, $logline);
