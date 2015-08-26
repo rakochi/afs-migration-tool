@@ -36,16 +36,18 @@ function createFolders(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
   foreach ($UsersAFSObj->folderList as $key => $value) 
   {
 
-     // Avoid creating a folder for the root directory 
-     if (strcmp($key, $UsersAFSObj->afsPath) == 0) { 
-     continue; 
-     } 
-
-     // Make sure the folder still exists in AFS  
-    if (!file_exists($key)) { 
-    continue; 
+    // Avoid creating a folder for the root directory 
+    if (strcmp($key, $UsersAFSObj->afsPath) == 0) 
+    { 
+      continue; 
     } 
-    
+
+    // Make sure the folder still exists in AFS  
+    if (!file_exists($key)) 
+    { 
+      continue; 
+    } 
+
     $parentFolderID = $UsersAFSObj->folderList[getParentFolder($key)];
     $logline = date('Y-m-d H:i:s') . " Parent folder name: " . getParentFolder($key) . "\n"; 
     $logline = $logline . date('Y-m-d H:i:s') . " Parent folder ID: " . $parentFolderID . "\n"; 
@@ -53,19 +55,21 @@ function createFolders(&$drive_service, &$client, &$configObj, &$UsersAFSObj)
 
     // See if the access token is about to expire
     if ($client->isAccessTokenExpired())
-     {
-        //Make sure we can read refresh token from .csv
-        if (get_stored_refreshtoken($configObj->refreshTokenFilename, $configObj->uniqname) == null)
-        {
-          die("Refresh Token could not be loaded.  Try revoking access for this script and try again.");
-        }
-        //Trade access token for refresh token
-        $client->refreshToken(get_stored_refreshtoken($configObj->refreshTokenFilename, $configObj->uniqname));
-        $trade_string = "token exhange occured: " . $configObj->uniqname . " " . date('Y-m-d H:i:s') . "\n";
-        file_put_contents($configObj->refreshTokenFilename, $trade_string, FILE_APPEND | LOCK_EX);
-     }
- 
-   //Create folder 
+    {
+      //Trade access token for refresh token
+      if ($client->refreshToken($configObj->refreshToken))
+      {
+        $logline = date('Y-m-d H:i:s') . ": Using refresh token, access token granted. \n"; 
+        fwrite($configObj->logFile, $logline);
+      }
+      else
+      {
+        $logline = date('Y-m-d H:i:s') . ": Unable to obtain access token. \n"; 
+        fwrite($configObj->logFile, $logline);
+      }
+    }
+
+    //Create folder 
     $logline = date('Y-m-d H:i:s') . " The folder name: " . getFileName($key) . "\n"; 
     $folder = createFolder($drive_service, getFileName($key), "", $parentFolderID, $configObj);
 
@@ -134,63 +138,68 @@ function doUpload(&$drive_service, &$client, &$file, &$parentFolderID, &$configO
 function uploadFiles(&$drive_service, &$client, &$configObj, &$UsersAFSObj) 
 {
 
-   foreach ($UsersAFSObj->fileList as $value) { 
-        $logline = date('Y-m-d H:i:s') . " File path: " . $value->path . "\n"; 
+  foreach ($UsersAFSObj->fileList as $value) 
+  { 
+    $logline = date('Y-m-d H:i:s') . " File path: " . $value->path . "\n"; 
+    fwrite($configObj->logFile, $logline);
+    // Make sure the file still exists in AFS 
+    if (!file_exists($value->path)) 
+    { 
+        $logline = date('Y-m-d H:i:s') . " Upload failed.  File does not exist!" . "\n"; 
         fwrite($configObj->logFile, $logline);
-        // Make sure the file still exists in AFS 
-        if (!file_exists($value->path)) { 
-            $logline = date('Y-m-d H:i:s') . " Upload failed.  File does not exist!" . "\n"; 
-            fwrite($configObj->logFile, $logline);
-            continue; 
-        } 
+        continue; 
+    } 
  
-        $parentFolderID = $UsersAFSObj->folderList[getParentFolder($value->path)]; 
-        $logline = date('Y-m-d H:i:s') . " Parent folder name: " . $value->path . "\n"; 
-        $logline = $logline . date('Y-m-d H:i:s') . " Parent folder ID: " . $parentFolderID  . "\n"; 
+    $parentFolderID = $UsersAFSObj->folderList[getParentFolder($value->path)]; 
+    $logline = date('Y-m-d H:i:s') . " Parent folder name: " . $value->path . "\n"; 
+    $logline = $logline . date('Y-m-d H:i:s') . " Parent folder ID: " . $parentFolderID  . "\n"; 
+    fwrite($configObj->logFile, $logline);
+
+    // If it couldn't find the parent folder's ID, skip this file 
+    if ($parentFolderID == null) 
+    { 
+        $logline = date('Y-m-d H:i:s') . " Upload failed.  No parent ID for parent folder!" . "\n"; 
         fwrite($configObj->logFile, $logline);
-
-        // If it couldn't find the parent folder's ID, skip this file 
-        if ($parentFolderID == null) { 
-            $logline = date('Y-m-d H:i:s') . " Upload failed.  No parent ID for parent folder!" . "\n"; 
-            fwrite($configObj->logFile, $logline);
-            continue; 
-        } 
+        continue; 
+    } 
 
 
-       if ($client->isAccessTokenExpired())
-       {
-        //Make sure we can read refresh token from .csv
-        if (get_stored_refreshtoken($configObj->refreshTokenFilename, $configObj->uniqname) == null)
-        {
-          die("Refresh Token could not be loaded.  Try revoking access for this script and try again.");
-        }
-        //Trade access token for refresh token
-        $client->refreshToken(get_stored_refreshtoken($configObj->refreshTokenFilename, $configObj->uniqname));
-        $trade_string = "token exhange occured: " . $configObj->uniqname . " " . date('Y-m-d H:i:s') . "\n";
-        file_put_contents($configObj->refreshTokenFilename, $trade_string, FILE_APPEND | LOCK_EX);
-       }
-        
-        //decides whether to do media or resumable upload and uploads file 
-        //1000 bytes is currently hardcoded as chunk size for resumable upload function
-        //make a config file for the chunk size?
-         $logline = date('Y-m-d H:i:s') . " Doing upload..." . "\n"; 
-         fwrite($configObj->logFile, $logline);
-         
-         $results = doUpload($drive_service, $client, $value, $parentFolderID, $configObj);
-         
-         if ($results)
-         {
-           array_push($UsersAFSObj->failedFiles, $value->path);
-           $logline = date('Y-m-d H:i:s') . " Failure" . "\n"; 
-           fwrite($configObj->logFile, $logline);
-         }
-         else
-         {
-           ++$UsersAFSObj->numFilesUploaded;
-           $logline = date('Y-m-d H:i:s') . " Success!" . "\n"; 
-           fwrite($configObj->logFile, $logline);
-         }
-   }
+    if ($client->isAccessTokenExpired())
+    {
+      //Trade access token for refresh token
+      if ($client->refreshToken($configObj->refreshToken))
+      {
+        $logline = date('Y-m-d H:i:s') . ": Using refresh token, access token granted. \n"; 
+        fwrite($configObj->logFile, $logline);
+      }
+      else
+      {
+        $logline = date('Y-m-d H:i:s') . ": Unable to obtain access token. \n"; 
+        fwrite($configObj->logFile, $logline);
+      }
+    }
+    
+    //decides whether to do media or resumable upload and uploads file 
+    //1000 bytes is currently hardcoded as chunk size for resumable upload function
+    //make a config file for the chunk size?
+    $logline = date('Y-m-d H:i:s') . " Doing upload..." . "\n"; 
+    fwrite($configObj->logFile, $logline);
+
+    $results = doUpload($drive_service, $client, $value, $parentFolderID, $configObj);
+
+    if ($results)
+    {
+      array_push($UsersAFSObj->failedFiles, $value->path);
+      $logline = date('Y-m-d H:i:s') . " Failure" . "\n"; 
+      fwrite($configObj->logFile, $logline);
+    }
+    else
+    {
+      ++$UsersAFSObj->numFilesUploaded;
+      $logline = date('Y-m-d H:i:s') . " Success!" . "\n"; 
+      fwrite($configObj->logFile, $logline);
+    }
+  }
 } 
 
 function insertFileMedia(&$service, $title, $description, $parentId, $mimeType, $filename, &$configObj) 
