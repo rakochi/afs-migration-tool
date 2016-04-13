@@ -20,7 +20,7 @@
 	
 
 	// Get the client ID, client secret, and redirect uri
-	$credentials = file_get_contents(__DIR__ . "/../../Private/box_credentials.json");
+	$credentials = file_get_contents("/usr/local/webhosting/projects/mfile/etc/box_credentials.json");
 	if (!$credentials) {
 		include '../notification_email.php';
 		exit();
@@ -226,8 +226,8 @@
 
 	// If the transfer completed successfully, delete the log file
 	if ($numFiles == $totalFiles and $numFolders == $totalFolders) {
-		unlink($logName);
-		unset($failedFiles);
+	//	unlink($logName);
+	//	unset($failedFiles);
 	}
 
 	// Send the notification email to the user
@@ -303,8 +303,10 @@
 			$fields = array(
 				'attributes' => json_encode(array(
 					"name" => $fileName,
-					"parent" => array("id" => $parentID)
-				)),
+					"parent" => array("id" => $parentID),
+			                "content_created_at" => date(DATE_RFC3339, filectime($path)),
+                                        "content_modified_at" => date(DATE_RFC3339, filemtime($path))
+                                )),
 				'file' => '@' . $path
 			);
 		}
